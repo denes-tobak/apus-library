@@ -1,15 +1,12 @@
-import { supabase } from "@/lib/supabase";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
-export default async function Home() {
-  const { data, error } = await supabase
-    .from("test_connection")
-    .select("*");
+export default async function HomePage() {
+  const supabase = await createClient();
 
-  return (
-    <main className="min-h-screen flex items-center justify-center">
-      <pre>
-        {JSON.stringify({ data, error }, null, 2)}
-      </pre>
-    </main>
-  );
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  redirect(user ? "/dashboard" : "/login");
 }

@@ -2,10 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
+
 
 export default function LoginPage() {
   const router = useRouter();
+  const supabase = createClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +32,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/");
+    router.push("/dashboard");
     router.refresh();
   }
 
