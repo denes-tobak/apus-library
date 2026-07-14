@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { useTranslations } from "next-intl";
+import {
+  useLocale,
+  useTranslations,
+} from "next-intl";
 import {
   AlertCircle,
   BookOpenText,
@@ -51,6 +54,7 @@ export function BookForm({
   initialValues = emptyValues,
   cancelHref,
 }: BookFormProps) {
+  const locale = useLocale();
   const t = useTranslations("BookForm");
   const categoryT = useTranslations("Categories");
 
@@ -60,11 +64,28 @@ export function BookForm({
       errors: {},
     });
 
+  const getCategoryLabel = (category: string) =>
+    categoryT.has(category)
+      ? categoryT(category)
+      : category;
+
+  const categoryCollator = new Intl.Collator(
+    locale,
+    {
+      sensitivity: "base",
+    },
+  );
+
   const categoryOptions = Array.from(
     new Set([
       ...BOOK_CATEGORIES,
       ...state.values.categories,
     ]),
+  ).sort((firstCategory, secondCategory) =>
+    categoryCollator.compare(
+      getCategoryLabel(firstCategory),
+      getCategoryLabel(secondCategory),
+    ),
   );
 
   const getInputClassName = (
@@ -341,9 +362,7 @@ export function BookForm({
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {categoryOptions.map((category) => {
             const categoryLabel =
-              categoryT.has(category)
-                ? categoryT(category)
-                : category;
+              getCategoryLabel(category);
 
             return (
               <label

@@ -20,4 +20,6 @@ export const BOOK_CATEGORIES = [
   "Thriller",
   "Travel",
   "Young Adult",
+  "Manga",
+  "Graphic Novel"
 ] as const;

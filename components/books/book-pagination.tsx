@@ -1,7 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+import {
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import {
   usePathname,
   useSearchParams,
@@ -71,6 +75,7 @@ export function BookPagination({
 }: BookPaginationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations("Pagination");
 
   if (totalPages <= 1) {
     return null;
@@ -101,31 +106,45 @@ export function BookPagination({
 
   return (
     <nav
-      aria-label="Book pagination"
-      className="flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row"
+      aria-label={t("ariaLabel")}
+      className="flex flex-col items-center justify-between gap-5 rounded-2xl border border-amber-950/10 bg-white px-5 py-5 shadow-[0_18px_50px_-34px_rgba(41,37,36,0.5)] sm:flex-row"
     >
-      <p className="text-sm text-muted-foreground">
-        Page {page} of {totalPages}
+      <p className="text-sm text-stone-500">
+        {t("pageOf", {
+          page,
+          totalPages,
+        })}
       </p>
 
       <div className="flex flex-wrap items-center justify-center gap-2">
         {page > 1 ? (
-          <Button asChild variant="outline" size="sm">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="border-stone-300 bg-white"
+          >
             <Link
               href={createPageHref(page - 1)}
               scroll={false}
             >
               <ChevronLeft className="size-4" />
+
               <span className="hidden sm:inline">
-                Previous
+                {t("previous")}
               </span>
             </Link>
           </Button>
         ) : (
-          <Button variant="outline" size="sm" disabled>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled
+          >
             <ChevronLeft className="size-4" />
+
             <span className="hidden sm:inline">
-              Previous
+              {t("previous")}
             </span>
           </Button>
         )}
@@ -136,7 +155,7 @@ export function BookPagination({
               <span
                 key={item}
                 aria-hidden="true"
-                className="flex size-9 items-center justify-center text-sm text-muted-foreground"
+                className="flex size-9 items-center justify-center text-sm text-stone-400"
               >
                 …
               </span>
@@ -151,7 +170,7 @@ export function BookPagination({
                 key={item}
                 type="button"
                 size="sm"
-                className="min-w-9"
+                className="min-w-9 bg-[#17231f] text-amber-50"
                 aria-current="page"
                 disabled
               >
@@ -166,12 +185,14 @@ export function BookPagination({
               asChild
               variant="outline"
               size="sm"
-              className="min-w-9"
+              className="min-w-9 border-stone-300 bg-white"
             >
               <Link
                 href={createPageHref(item)}
                 scroll={false}
-                aria-label={`Go to page ${item}`}
+                aria-label={t("goToPage", {
+                  page: item,
+                })}
               >
                 {item}
               </Link>
@@ -180,18 +201,33 @@ export function BookPagination({
         })}
 
         {page < totalPages ? (
-          <Button asChild variant="outline" size="sm">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="border-stone-300 bg-white"
+          >
             <Link
               href={createPageHref(page + 1)}
               scroll={false}
             >
-              <span className="hidden sm:inline">Next</span>
+              <span className="hidden sm:inline">
+                {t("next")}
+              </span>
+
               <ChevronRight className="size-4" />
             </Link>
           </Button>
         ) : (
-          <Button variant="outline" size="sm" disabled>
-            <span className="hidden sm:inline">Next</span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled
+          >
+            <span className="hidden sm:inline">
+              {t("next")}
+            </span>
+
             <ChevronRight className="size-4" />
           </Button>
         )}
