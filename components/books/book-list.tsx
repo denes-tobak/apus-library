@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Book } from "@/types/book";
+import Link from "next/link";
 
 type BookListProps = {
   books: Book[];
@@ -116,45 +117,45 @@ export function BookList({ books }: BookListProps) {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {visibleBooks.map((book) => (
-            <Card
-              key={book.id}
-              className="transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <CardHeader>
-                <CardTitle className="line-clamp-2">
-                  {book.title}
-                </CardTitle>
+  <Link
+    key={book.id}
+    href={`/books/${book.id}`}
+    aria-label={`View details for ${book.title}`}
+    className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  >
+    <Card className="h-full transition hover:-translate-y-0.5 hover:shadow-md">
+      <CardHeader>
+        <CardTitle className="line-clamp-2">
+          {book.title}
+        </CardTitle>
 
-                <p className="text-sm text-muted-foreground">
-                  {book.author}
-                </p>
-              </CardHeader>
+        <p className="text-sm text-muted-foreground">
+          {book.author}
+        </p>
+      </CardHeader>
 
-              <CardContent className="space-y-2 text-sm">
-                <p>
-                  <span className="font-medium">Year:</span>{" "}
-                  {book.published_year ?? "Unknown"}
-                </p>
+      <CardContent className="space-y-2 text-sm">
+        <p>
+          <span className="font-medium">Year:</span>{" "}
+          {book.published_year ?? "Unknown"}
+        </p>
 
-                <p>
-                  <span className="font-medium">
-                    Category:
-                  </span>{" "}
-                  {book.category ?? "Uncategorized"}
-                </p>
+        <p>
+          <span className="font-medium">Category:</span>{" "}
+          {book.category ?? "Uncategorized"}
+        </p>
 
-                {book.series_number !== null &&
-                  book.series_number > 0 && (
-                    <p>
-                      <span className="font-medium">
-                        Series:
-                      </span>{" "}
-                      #{book.series_number}
-                    </p>
-                  )}
-              </CardContent>
-            </Card>
-          ))}
+        {book.series_number !== null &&
+          book.series_number > 0 && (
+            <p>
+              <span className="font-medium">Series:</span>{" "}
+              #{book.series_number}
+            </p>
+          )}
+      </CardContent>
+    </Card>
+  </Link>
+))}
         </div>
       )}
     </div>
