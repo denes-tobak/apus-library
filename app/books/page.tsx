@@ -27,29 +27,24 @@ export default async function BooksPage() {
     <main className="min-h-screen bg-muted/40">
       <section className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <Button variant="ghost" asChild>
-              <Link href="/dashboard">
-                <ArrowLeft />
-                Dashboard
-              </Link>
-            </Button>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <div>
+    <h1 className="text-3xl font-bold tracking-tight">
+      Books
+    </h1>
 
-            <h1 className="mt-4 text-3xl font-bold tracking-tight">
-              Books
-            </h1>
+    <p className="text-muted-foreground">
+      Browse and manage your library.
+    </p>
+  </div>
 
-            <p className="mt-2 text-muted-foreground">
-              Browse the books stored in Apus Library.
-            </p>
-          </div>
-
-          <Button asChild>
-            <Link href="/books/new">
-              <Plus />
-              Add book
-            </Link>
-          </Button>
+  <Button asChild>
+    <Link href="/books/new">
+      <Plus className="size-4" />
+      Add book
+    </Link>
+  </Button>
+</div>
         </div>
 
         {error && (
