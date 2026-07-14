@@ -4,7 +4,16 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-  // Keep your existing Next.js options here.
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "snbpmwfbhiagsnoeoviv.supabase.co",
+        pathname:
+          "/storage/v1/object/public/book-covers/**",
+      },
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);

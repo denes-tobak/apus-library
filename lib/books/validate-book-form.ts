@@ -11,10 +11,31 @@ export type BookWriteValues = {
   series_number: number | null;
 };
 
+export type BookFormValidationMessages = {
+  titleRequired: string;
+  authorRequired: string;
+  invalidPublishedYear: string;
+  invalidSeriesNumber: string;
+  tooManyCategories: string;
+  categoryNameTooLong: string;
+};
+
 type BookFormValidationResult = {
   values: BookFormValues;
   errors: BookFormErrors;
   data: BookWriteValues | null;
+};
+
+const DEFAULT_VALIDATION_MESSAGES: BookFormValidationMessages = {
+  titleRequired: "Title is required.",
+  authorRequired: "Author is required.",
+  invalidPublishedYear: "Enter a valid publication year.",
+  invalidSeriesNumber:
+    "Series number must be a positive whole number.",
+  tooManyCategories:
+    "A book can have a maximum of 10 categories.",
+  categoryNameTooLong:
+    "Category names cannot exceed 50 characters.",
 };
 
 function getTextValue(
@@ -29,7 +50,10 @@ function getTextValue(
 function getCategories(formData: FormData) {
   const categories = formData
     .getAll("categories")
-    .filter((value): value is string => typeof value === "string")
+    .filter(
+      (value): value is string =>
+        typeof value === "string",
+    )
     .map((value) => value.trim())
     .filter(Boolean);
 
@@ -38,6 +62,8 @@ function getCategories(formData: FormData) {
 
 export function validateBookForm(
   formData: FormData,
+  messages: BookFormValidationMessages =
+    DEFAULT_VALIDATION_MESSAGES,
 ): BookFormValidationResult {
   const values: BookFormValues = {
     title: getTextValue(formData, "title"),
@@ -56,11 +82,11 @@ export function validateBookForm(
   const errors: BookFormErrors = {};
 
   if (!values.title) {
-    errors.title = "Title is required.";
+    errors.title = messages.titleRequired;
   }
 
   if (!values.author) {
-    errors.author = "Author is required.";
+    errors.author = messages.authorRequired;
   }
 
   const publishedYear = values.published_year
@@ -74,7 +100,7 @@ export function validateBookForm(
       publishedYear > 9999)
   ) {
     errors.published_year =
-      "Enter a valid publication year.";
+      messages.invalidPublishedYear;
   }
 
   const seriesNumber = values.series_number
@@ -87,12 +113,11 @@ export function validateBookForm(
       seriesNumber < 1)
   ) {
     errors.series_number =
-      "Series number must be a positive whole number.";
+      messages.invalidSeriesNumber;
   }
 
   if (values.categories.length > 10) {
-    errors.categories =
-      "A book can have a maximum of 10 categories.";
+    errors.categories = messages.tooManyCategories;
   }
 
   if (
@@ -100,8 +125,7 @@ export function validateBookForm(
       (category) => category.length > 50,
     )
   ) {
-    errors.categories =
-      "Category names cannot exceed 50 characters.";
+    errors.categories = messages.categoryNameTooLong;
   }
 
   if (Object.keys(errors).length > 0) {

@@ -198,5 +198,20 @@
   "previous": "Előző",
   "next": "Következő",
   "goToPage": "Ugrás a(z) {page}. oldalra"
+},
+"BookValidation": {
+  "titleRequired": "A cím megadása kötelező.",
+  "authorRequired": "A szerző megadása kötelező.",
+  "invalidPublishedYear": "Adj meg egy érvényes kiadási évet.",
+  "invalidSeriesNumber": "A sorozatszámnak pozitív egész számnak kell lennie.",
+  "tooManyCategories": "Egy könyvhöz legfeljebb 10 kategória adható meg.",
+  "categoryNameTooLong": "A kategórianevek legfeljebb 50 karakter hosszúak lehetnek."
+},
+"errors": {
+  "bookNotIdentified": "A könyvet nem sikerült azonosítani.",
+  "sessionExpired": "A munkameneted lejárt. Jelentkezz be újra.",
+  "addFailed": "A könyvet nem sikerült hozzáadni. Próbáld újra.",
+  "updateFailed": "A könyvet nem sikerült frissíteni. Próbáld újra.",
+  "bookMissing": "Ez a könyv már nem található."
 }
 }

@@ -46,21 +46,22 @@ export default async function BookDetailsPage({
     ]);
 
   const { data: book, error } = await supabase
-    .from("books")
-    .select(
-      `
-        id,
-        title,
-        author,
-        published_year,
-        categories,
-        series_number,
-        created_at,
-        updated_at
-      `,
-    )
-    .eq("id", bookId)
-    .maybeSingle();
+  .from("books")
+  .select(
+    `
+      id,
+      title,
+      author,
+      published_year,
+      categories,
+      series_number,
+      cover_path,
+      created_at,
+      updated_at
+    `,
+  )
+  .eq("id", bookId)
+  .maybeSingle();
 
   if (error) {
     throw new Error(
@@ -114,11 +115,11 @@ export default async function BookDetailsPage({
 
   return (
     <div className="space-y-6 pb-12">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-amber-950/10 bg-white/90 p-3 shadow-[0_16px_45px_-32px_rgba(41,37,36,0.65)] backdrop-blur sm:flex-row sm:items-center sm:justify-between">
         <Button
           asChild
-          variant="ghost"
-          className="-ml-3 w-fit text-stone-600 hover:bg-amber-100/70 hover:text-stone-950"
+          variant="outline"
+          className="h-11 w-fit rounded-xl border-stone-200 bg-white px-4 text-stone-700 shadow-sm hover:border-amber-300 hover:bg-amber-50 hover:text-amber-950"
         >
           <Link href="/books">
             <ArrowLeft className="size-4" />
@@ -126,11 +127,11 @@ export default async function BookDetailsPage({
           </Link>
         </Button>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             asChild
             variant="outline"
-            className="border-stone-300 bg-white/80 hover:border-amber-300 hover:bg-amber-50"
+            className="h-11 rounded-xl border-amber-200 bg-amber-50 px-4 font-medium text-amber-950 shadow-sm hover:border-amber-300 hover:bg-amber-100"
           >
             <Link href={`/books/${book.id}/edit`}>
               <Pencil className="size-4" />
@@ -149,6 +150,7 @@ export default async function BookDetailsPage({
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -right-28 -top-32 size-96 rounded-full border border-white/10" />
           <div className="absolute -right-8 -top-16 size-72 rounded-full border border-white/10" />
+
           <div className="absolute bottom-0 left-1/3 h-px w-96 bg-gradient-to-r from-transparent via-amber-200/40 to-transparent" />
 
           <BookOpen className="absolute -bottom-14 right-8 size-72 rotate-6 text-white/[0.035]" />
@@ -233,7 +235,9 @@ export default async function BookDetailsPage({
                   {categories.map((category) => (
                     <Link
                       key={category}
-                      href={`/books?category=${encodeURIComponent(category)}`}
+                      href={`/books?category=${encodeURIComponent(
+                        category,
+                      )}`}
                       className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/20 bg-amber-100/10 px-3 py-1.5 text-sm font-medium text-amber-50 transition hover:border-amber-200/40 hover:bg-amber-100/20"
                     >
                       <Tags className="size-3.5" />

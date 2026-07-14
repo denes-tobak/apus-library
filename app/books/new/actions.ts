@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { validateBookForm } from "@/lib/books/validate-book-form";
 import { createClient } from "@/lib/supabase/server";
@@ -11,7 +12,29 @@ export async function addBook(
   _previousState: BookFormState,
   formData: FormData,
 ): Promise<BookFormState> {
-  const validation = validateBookForm(formData);
+  const validationT = await getTranslations(
+    "BookValidation",
+  );
+  const errorT = await getTranslations(
+    "BookForm.errors",
+  );
+
+  const validation = validateBookForm(formData, {
+    titleRequired: validationT("titleRequired"),
+    authorRequired: validationT("authorRequired"),
+    invalidPublishedYear: validationT(
+      "invalidPublishedYear",
+    ),
+    invalidSeriesNumber: validationT(
+      "invalidSeriesNumber",
+    ),
+    tooManyCategories: validationT(
+      "tooManyCategories",
+    ),
+    categoryNameTooLong: validationT(
+      "categoryNameTooLong",
+    ),
+  });
 
   if (!validation.data) {
     return {
@@ -31,7 +54,7 @@ export async function addBook(
     return {
       values: validation.values,
       errors: {
-        form: "Your session has expired. Please log in again.",
+        form: errorT("sessionExpired"),
       },
     };
   }
@@ -48,11 +71,13 @@ export async function addBook(
     return {
       values: validation.values,
       errors: {
-        form: "The book could not be added. Please try again.",
+        form: errorT("addFailed"),
       },
     };
   }
 
+  revalidatePath("/dashboard");
   revalidatePath("/books");
+
   redirect(`/books/${book.id}`);
 }

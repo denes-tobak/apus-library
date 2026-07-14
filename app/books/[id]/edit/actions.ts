@@ -13,11 +13,29 @@ export async function updateBook(
   _previousState: BookFormState,
   formData: FormData,
 ): Promise<BookFormState> {
-  const t = await getTranslations(
+  const validationT = await getTranslations(
+    "BookValidation",
+  );
+  const errorT = await getTranslations(
     "BookForm.errors",
   );
 
-  const validation = validateBookForm(formData);
+  const validation = validateBookForm(formData, {
+    titleRequired: validationT("titleRequired"),
+    authorRequired: validationT("authorRequired"),
+    invalidPublishedYear: validationT(
+      "invalidPublishedYear",
+    ),
+    invalidSeriesNumber: validationT(
+      "invalidSeriesNumber",
+    ),
+    tooManyCategories: validationT(
+      "tooManyCategories",
+    ),
+    categoryNameTooLong: validationT(
+      "categoryNameTooLong",
+    ),
+  });
 
   if (!validation.data) {
     return {
@@ -30,7 +48,7 @@ export async function updateBook(
     return {
       values: validation.values,
       errors: {
-        form: t("bookNotIdentified"),
+        form: errorT("bookNotIdentified"),
       },
     };
   }
@@ -46,7 +64,7 @@ export async function updateBook(
     return {
       values: validation.values,
       errors: {
-        form: t("sessionExpired"),
+        form: errorT("sessionExpired"),
       },
     };
   }
@@ -71,7 +89,7 @@ export async function updateBook(
     return {
       values: validation.values,
       errors: {
-        form: t("updateFailed"),
+        form: errorT("updateFailed"),
       },
     };
   }
@@ -80,11 +98,12 @@ export async function updateBook(
     return {
       values: validation.values,
       errors: {
-        form: t("bookMissing"),
+        form: errorT("bookMissing"),
       },
     };
   }
 
+  revalidatePath("/dashboard");
   revalidatePath("/books");
   revalidatePath(`/books/${bookId}`);
   revalidatePath(`/books/${bookId}/edit`);

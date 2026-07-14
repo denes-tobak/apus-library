@@ -55,13 +55,13 @@ export function DeleteBookButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          variant="destructive"
-          className="shadow-sm"
-        >
-          <Trash2 className="size-4" />
-          {t("trigger")}
-        </Button>
+     <Button
+  variant="outline"
+  className="h-11 rounded-xl border-red-200 bg-red-50 px-4 font-medium text-red-700 shadow-sm hover:border-red-300 hover:bg-red-100 hover:text-red-800"
+>
+  <Trash2 className="size-4" />
+  {t("trigger")}
+</Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="overflow-hidden border-amber-950/10 bg-[#fffdf8] p-0 sm:max-w-md">

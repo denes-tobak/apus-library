@@ -38,20 +38,21 @@ export default async function EditBookPage({
     getTranslations("EditBook"),
   ]);
 
-  const { data: book, error } = await supabase
-    .from("books")
-    .select(
-      `
-        id,
-        title,
-        author,
-        published_year,
-        categories,
-        series_number
-      `,
-    )
-    .eq("id", bookId)
-    .maybeSingle();
+ const { data: book, error } = await supabase
+  .from("books")
+  .select(
+    `
+      id,
+      title,
+      author,
+      published_year,
+      categories,
+      series_number,
+      cover_path
+    `,
+  )
+  .eq("id", bookId)
+  .maybeSingle();
 
   if (error) {
     throw new Error(
@@ -88,16 +89,18 @@ export default async function EditBookPage({
 
   return (
     <div className="space-y-6 pb-12">
-      <Button
-        asChild
-        variant="ghost"
-        className="-ml-3 w-fit text-stone-600 hover:bg-amber-100/70 hover:text-stone-950"
-      >
-        <Link href={`/books/${book.id}`}>
-          <ArrowLeft className="size-4" />
-          {t("backToBook")}
-        </Link>
-      </Button>
+      <div className="rounded-2xl border border-amber-950/10 bg-white/90 p-3 shadow-[0_16px_45px_-32px_rgba(41,37,36,0.65)] backdrop-blur">
+  <Button
+    asChild
+    variant="outline"
+    className="h-11 w-fit rounded-xl border-stone-200 bg-white px-4 text-stone-700 shadow-sm hover:border-amber-300 hover:bg-amber-50 hover:text-amber-950"
+  >
+    <Link href={`/books/${book.id}`}>
+      <ArrowLeft className="size-4" />
+      {t("backToBook")}
+    </Link>
+  </Button>
+</div>
 
       <section className="relative overflow-hidden rounded-[2rem] border border-amber-950/10 bg-[#17231f] text-white shadow-[0_28px_80px_-42px_rgba(28,25,23,0.9)]">
         <div className="pointer-events-none absolute inset-0">

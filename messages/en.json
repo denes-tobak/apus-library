@@ -198,5 +198,20 @@
   "previous": "Previous",
   "next": "Next",
   "goToPage": "Go to page {page}"
+},
+"BookValidation": {
+  "titleRequired": "Title is required.",
+  "authorRequired": "Author is required.",
+  "invalidPublishedYear": "Enter a valid publication year.",
+  "invalidSeriesNumber": "Series number must be a positive whole number.",
+  "tooManyCategories": "A book can have a maximum of 10 categories.",
+  "categoryNameTooLong": "Category names cannot exceed 50 characters."
+},
+"errors": {
+  "bookNotIdentified": "The book could not be identified.",
+  "sessionExpired": "Your session has expired. Please log in again.",
+  "addFailed": "The book could not be added. Please try again.",
+  "updateFailed": "The book could not be updated. Please try again.",
+  "bookMissing": "The book no longer exists."
 }
 }
