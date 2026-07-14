@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
+import { DeleteBookButton } from "@/components/books/delete-book-button";
 
 type BookDetailsPageProps = {
   params: Promise<{
@@ -56,21 +57,28 @@ export default async function BookDetailsPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <Button asChild variant="ghost" className="-ml-3">
-            <Link href="/books">
-            <ArrowLeft className="size-4" />
-            Back to books
-            </Link>
-        </Button>
+     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <Button asChild variant="ghost" className="-ml-3">
+    <Link href="/books">
+      <ArrowLeft className="size-4" />
+      Back to books
+    </Link>
+  </Button>
 
-        <Button asChild variant="outline">
-            <Link href={`/books/${book.id}/edit`}>
-            <Pencil className="size-4" />
-            Edit book
-            </Link>
-        </Button>
-    </div>
+  <div className="flex gap-2">
+    <Button asChild variant="outline">
+      <Link href={`/books/${book.id}/edit`}>
+        <Pencil className="size-4" />
+        Edit book
+      </Link>
+    </Button>
+
+    <DeleteBookButton
+      bookId={book.id}
+      bookTitle={book.title}
+    />
+  </div>
+</div>
 
       <Card>
         <CardHeader>
