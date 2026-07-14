@@ -38,7 +38,7 @@ import {
   type BookSortOption,
 } from "@/lib/books/book-query";
 import type { Book } from "@/types/book";
-
+import { BookCover } from "@/components/books/book-cover";
 type CategoryOption = {
   name: string;
   bookCount: number;
@@ -525,12 +525,6 @@ export function BookList({
                   0,
                 );
 
-              const titleInitial =
-                book.title
-                  .trim()
-                  .charAt(0)
-                  .toUpperCase() || "A";
-
               return (
                 <Link
                   key={book.id}
@@ -544,9 +538,12 @@ export function BookList({
                     <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-700 via-amber-300 to-transparent opacity-60" />
 
                     <div className="flex items-start gap-4">
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#17231f] font-serif text-xl font-semibold text-amber-100 shadow-sm">
-                        {titleInitial}
-                      </div>
+                     <BookCover
+  title={book.title}
+  author={book.author}
+  coverPath={book.cover_path}
+  variant="card"
+/>
 
                       <div className="min-w-0 flex-1">
                         <h2 className="line-clamp-2 font-serif text-xl font-semibold leading-snug text-stone-950">

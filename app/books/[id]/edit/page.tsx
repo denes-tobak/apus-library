@@ -11,11 +11,18 @@ import {
   Tags,
 } from "lucide-react";
 
+import { BookCoverForm } from "@/components/books/book-cover-form";
 import { BookForm } from "@/components/books/book-form";
 import { Button } from "@/components/ui/button";
+import { getBookCoverUrl } from "@/lib/books/get-book-cover-url";
 import { createClient } from "@/lib/supabase/server";
 
 import { updateBook } from "./actions";
+import {
+  removeBookCover,
+  uploadBookCover,
+} from "./cover-actions";
+import { BookCover } from "@/components/books/book-cover";
 
 type EditBookPageProps = {
   params: Promise<{
@@ -38,21 +45,23 @@ export default async function EditBookPage({
     getTranslations("EditBook"),
   ]);
 
- const { data: book, error } = await supabase
-  .from("books")
-  .select(
-    `
+  const { data: book, error } = await supabase
+    .from("books")
+    .select(
+      `
       id,
       title,
       author,
       published_year,
       categories,
       series_number,
-      cover_path
-    `,
-  )
-  .eq("id", bookId)
-  .maybeSingle();
+      cover_path,
+      created_at,
+      updated_at
+      `,
+    )
+    .eq("id", bookId)
+    .maybeSingle();
 
   if (error) {
     throw new Error(
@@ -69,14 +78,21 @@ export default async function EditBookPage({
     book.id,
   );
 
+  const uploadBookCoverWithId =
+    uploadBookCover.bind(null, book.id);
+
+  const removeBookCoverWithId =
+    removeBookCover.bind(null, book.id);
+
+  const coverUrl = getBookCoverUrl(
+    book.cover_path,
+  );
+
   const categories: string[] = Array.isArray(
     book.categories,
   )
     ? book.categories
     : [];
-
-  const titleInitial =
-    book.title.trim().charAt(0).toUpperCase() || "A";
 
   const publicationYear =
     book.published_year ?? t("unknown");
@@ -90,17 +106,17 @@ export default async function EditBookPage({
   return (
     <div className="space-y-6 pb-12">
       <div className="rounded-2xl border border-amber-950/10 bg-white/90 p-3 shadow-[0_16px_45px_-32px_rgba(41,37,36,0.65)] backdrop-blur">
-  <Button
-    asChild
-    variant="outline"
-    className="h-11 w-fit rounded-xl border-stone-200 bg-white px-4 text-stone-700 shadow-sm hover:border-amber-300 hover:bg-amber-50 hover:text-amber-950"
-  >
-    <Link href={`/books/${book.id}`}>
-      <ArrowLeft className="size-4" />
-      {t("backToBook")}
-    </Link>
-  </Button>
-</div>
+        <Button
+          asChild
+          variant="outline"
+          className="h-11 w-fit rounded-xl border-stone-200 bg-white px-4 text-stone-700 shadow-sm hover:border-amber-300 hover:bg-amber-50 hover:text-amber-950"
+        >
+          <Link href={`/books/${book.id}`}>
+            <ArrowLeft className="size-4" />
+            {t("backToBook")}
+          </Link>
+        </Button>
+      </div>
 
       <section className="relative overflow-hidden rounded-[2rem] border border-amber-950/10 bg-[#17231f] text-white shadow-[0_28px_80px_-42px_rgba(28,25,23,0.9)]">
         <div className="pointer-events-none absolute inset-0">
@@ -136,9 +152,14 @@ export default async function EditBookPage({
               <div className="absolute inset-x-5 bottom-6 h-px bg-amber-950/20" />
 
               <div className="flex h-full flex-col items-center justify-center px-6 text-center text-stone-900">
-                <div className="flex size-14 items-center justify-center rounded-full border border-amber-950/20 bg-white/50 font-serif text-2xl font-semibold shadow-sm">
-                  {titleInitial}
-                </div>
+               <div className="mx-auto w-full max-w-[210px] lg:mx-0">
+  <BookCover
+    title={book.title}
+    author={book.author}
+    coverPath={book.cover_path}
+    variant="details"
+  />
+</div>
 
                 <p className="mt-5 line-clamp-3 font-serif text-base font-semibold leading-tight">
                   {book.title}
@@ -224,40 +245,51 @@ export default async function EditBookPage({
           </dl>
         </aside>
 
-        <div className="overflow-hidden rounded-3xl border border-amber-950/10 bg-white shadow-[0_24px_70px_-40px_rgba(41,37,36,0.6)]">
-          <div className="border-b border-stone-200 bg-stone-50/70 px-5 py-6 sm:px-8">
-            <div className="flex items-start gap-3">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#17231f] text-amber-100">
-                <PencilLine className="size-5" />
-              </div>
+        <div className="space-y-6">
+          <BookCoverForm
+            bookTitle={book.title}
+            coverUrl={coverUrl}
+            uploadAction={uploadBookCoverWithId}
+            removeAction={removeBookCoverWithId}
+          />
 
-              <div>
-                <h2 className="font-serif text-2xl font-semibold text-stone-950">
-                  {t("formTitle")}
-                </h2>
+          <div className="overflow-hidden rounded-3xl border border-amber-950/10 bg-white shadow-[0_24px_70px_-40px_rgba(41,37,36,0.6)]">
+            <div className="border-b border-stone-200 bg-stone-50/70 px-5 py-6 sm:px-8">
+              <div className="flex items-start gap-3">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#17231f] text-amber-100">
+                  <PencilLine className="size-5" />
+                </div>
 
-                <p className="mt-1 text-sm leading-6 text-stone-500">
-                  {t("formDescription")}
-                </p>
+                <div>
+                  <h2 className="font-serif text-2xl font-semibold text-stone-950">
+                    {t("formTitle")}
+                  </h2>
+
+                  <p className="mt-1 text-sm leading-6 text-stone-500">
+                    {t("formDescription")}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="p-5 sm:p-8">
-            <BookForm
-              action={updateBookWithId}
-              submitLabel={t("saveChanges")}
-              cancelHref={`/books/${book.id}`}
-              initialValues={{
-                title: book.title,
-                author: book.author,
-                published_year:
-                  book.published_year?.toString() ?? "",
-                categories,
-                series_number:
-                  book.series_number?.toString() ?? "",
-              }}
-            />
+            <div className="p-5 sm:p-8">
+              <BookForm
+                action={updateBookWithId}
+                submitLabel={t("saveChanges")}
+                cancelHref={`/books/${book.id}`}
+                initialValues={{
+                  title: book.title,
+                  author: book.author,
+                  published_year:
+                    book.published_year?.toString() ??
+                    "",
+                  categories,
+                  series_number:
+                    book.series_number?.toString() ??
+                    "",
+                }}
+              />
+            </div>
           </div>
         </div>
       </section>

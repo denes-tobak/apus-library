@@ -213,5 +213,33 @@
   "addFailed": "A könyvet nem sikerült hozzáadni. Próbáld újra.",
   "updateFailed": "A könyvet nem sikerült frissíteni. Próbáld újra.",
   "bookMissing": "Ez a könyv már nem található."
+},
+"BookCover": {
+  "title": "Könyvborító",
+  "description": "Tölts fel, cserélj le vagy távolíts el egy, a könyvhöz tartozó borítóképet.",
+  "uploadLabel": "Borítókép kiválasztása",
+  "replaceLabel": "Új borítókép kiválasztása",
+  "fileHelp": "JPEG, PNG vagy WebP. Legnagyobb fájlméret: 3 MB.",
+  "noCover": "Nincs feltöltött borító",
+  "previewAlt": "A(z) {title} borítójának előnézete",
+  "uploadButton": "Borító feltöltése",
+  "replaceButton": "Borító cseréje",
+  "uploading": "Feltöltés...",
+  "removeButton": "Borító eltávolítása",
+  "removing": "Eltávolítás...",
+  "uploadSuccess": "A könyvborító sikeresen feltöltve.",
+  "removeSuccess": "A könyvborító eltávolítva.",
+  "errors": {
+    "bookNotIdentified": "A könyvet nem sikerült azonosítani.",
+    "sessionExpired": "A munkameneted lejárt. Jelentkezz be újra.",
+    "fileRequired": "Feltöltés előtt válassz ki egy képet.",
+    "invalidFileType": "A borítónak JPEG, PNG vagy WebP képnek kell lennie.",
+    "fileTooLarge": "A borítókép mérete nem lehet nagyobb 3 MB-nál.",
+    "bookLoadFailed": "A könyvet nem sikerült betölteni. Próbáld újra.",
+    "bookMissing": "A könyv már nem található.",
+    "uploadFailed": "A borítóképet nem sikerült feltölteni. Próbáld újra.",
+    "saveFailed": "A feltöltött borítót nem sikerült a könyvhöz kapcsolni.",
+    "removeFailed": "A borítót nem sikerült eltávolítani. Próbáld újra."
+  }
 }
 }

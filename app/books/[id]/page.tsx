@@ -17,6 +17,7 @@ import {
   getTranslations,
 } from "next-intl/server";
 
+import { BookCover } from "@/components/books/book-cover";
 import { DeleteBookButton } from "@/components/books/delete-book-button";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
@@ -46,22 +47,22 @@ export default async function BookDetailsPage({
     ]);
 
   const { data: book, error } = await supabase
-  .from("books")
-  .select(
-    `
-      id,
-      title,
-      author,
-      published_year,
-      categories,
-      series_number,
-      cover_path,
-      created_at,
-      updated_at
-    `,
-  )
-  .eq("id", bookId)
-  .maybeSingle();
+    .from("books")
+    .select(
+      `
+        id,
+        title,
+        author,
+        published_year,
+        categories,
+        series_number,
+        cover_path,
+        created_at,
+        updated_at
+      `,
+    )
+    .eq("id", bookId)
+    .maybeSingle();
 
   if (error) {
     throw new Error(
@@ -110,9 +111,6 @@ export default async function BookDetailsPage({
       })
     : createdDate;
 
-  const titleInitial =
-    book.title.trim().charAt(0).toUpperCase() || "A";
-
   return (
     <div className="space-y-6 pb-12">
       <div className="flex flex-col gap-3 rounded-2xl border border-amber-950/10 bg-white/90 p-3 shadow-[0_16px_45px_-32px_rgba(41,37,36,0.65)] backdrop-blur sm:flex-row sm:items-center sm:justify-between">
@@ -158,26 +156,12 @@ export default async function BookDetailsPage({
 
         <div className="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-[210px_minmax(0,1fr)] lg:gap-12 lg:p-12">
           <div className="mx-auto w-full max-w-[210px] lg:mx-0">
-            <div className="relative aspect-[3/4] overflow-hidden rounded-r-2xl rounded-l-md border border-amber-100/20 bg-gradient-to-br from-amber-100 via-amber-50 to-stone-200 shadow-[16px_22px_45px_-18px_rgba(0,0,0,0.75)]">
-              <div className="absolute inset-y-0 left-0 w-4 border-r border-amber-950/20 bg-amber-900/20" />
-
-              <div className="absolute inset-x-6 top-7 h-px bg-amber-950/20" />
-              <div className="absolute inset-x-6 bottom-7 h-px bg-amber-950/20" />
-
-              <div className="flex h-full flex-col items-center justify-center px-8 text-center text-stone-900">
-                <div className="flex size-16 items-center justify-center rounded-full border border-amber-950/20 bg-white/50 font-serif text-3xl font-semibold shadow-sm">
-                  {titleInitial}
-                </div>
-
-                <p className="mt-6 line-clamp-3 font-serif text-xl font-semibold leading-tight">
-                  {book.title}
-                </p>
-
-                <p className="mt-3 line-clamp-2 text-sm text-stone-600">
-                  {book.author}
-                </p>
-              </div>
-            </div>
+            <BookCover
+              title={book.title}
+              author={book.author}
+              coverPath={book.cover_path}
+              variant="details"
+            />
           </div>
 
           <div className="flex min-w-0 flex-col justify-center">

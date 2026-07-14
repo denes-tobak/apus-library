@@ -213,5 +213,33 @@
   "addFailed": "The book could not be added. Please try again.",
   "updateFailed": "The book could not be updated. Please try again.",
   "bookMissing": "The book no longer exists."
+},
+"BookCover": {
+  "title": "Book cover",
+  "description": "Upload, replace or remove the cover image associated with this book.",
+  "uploadLabel": "Choose a cover image",
+  "replaceLabel": "Choose a replacement cover",
+  "fileHelp": "JPEG, PNG or WebP. Maximum file size: 3 MB.",
+  "noCover": "No cover uploaded",
+  "previewAlt": "Cover preview for {title}",
+  "uploadButton": "Upload cover",
+  "replaceButton": "Replace cover",
+  "uploading": "Uploading...",
+  "removeButton": "Remove cover",
+  "removing": "Removing...",
+  "uploadSuccess": "The book cover was uploaded successfully.",
+  "removeSuccess": "The book cover was removed.",
+  "errors": {
+    "bookNotIdentified": "The book could not be identified.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "fileRequired": "Choose an image before uploading.",
+    "invalidFileType": "The cover must be a JPEG, PNG or WebP image.",
+    "fileTooLarge": "The cover image cannot be larger than 3 MB.",
+    "bookLoadFailed": "The book could not be loaded. Please try again.",
+    "bookMissing": "The book no longer exists.",
+    "uploadFailed": "The cover image could not be uploaded. Please try again.",
+    "saveFailed": "The uploaded cover could not be connected to the book.",
+    "removeFailed": "The cover could not be removed. Please try again."
+  }
 }
 }
