@@ -20,5 +20,26 @@
     "signingIn": "Signing in...",
     "invalidCredentials": "The email address or password is incorrect.",
     "footer": "Apus Library helps keep your collection organized and easy to explore."
-  }
+  },
+  "Navigation": {
+  "dashboard": "Dashboard",
+  "logout": "Logout"
+},
+"Dashboard": {
+  "welcomeBack": "Welcome back",
+  "totalBooks": "Total books",
+  "totalBooksDescription": "Books currently stored in the library.",
+  "uniqueAuthors": "Unique authors",
+  "uniqueAuthorsDescription": "Different authors represented in the collection.",
+  "categories": "Categories",
+  "categoriesDescription": "Categories currently in use.",
+  "uncategorized": "Uncategorized",
+  "uncategorizedDescription": "Books still needing categorization.",
+  "recentlyAdded": "Recently added",
+  "recentlyAddedDescription": "The latest books added to the library.",
+  "viewAll": "View all",
+  "noBooks": "No books have been added yet.",
+  "browseLibrary": "Browse library",
+  "addBook": "Add book"
+}
 }

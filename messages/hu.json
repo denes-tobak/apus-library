@@ -20,5 +20,26 @@
     "signingIn": "Bejelentkezés...",
     "invalidCredentials": "A megadott e-mail-cím vagy jelszó nem megfelelő.",
     "footer": "Az Apus Library segít rendszerezni és könnyen áttekinteni a gyűjteményt."
-  }
+  },
+  "Navigation": {
+  "dashboard": "Vezérlőpult",
+  "logout": "Kijelentkezés"
+},
+"Dashboard": {
+  "welcomeBack": "Üdv újra!",
+  "totalBooks": "Összes könyv",
+  "totalBooksDescription": "A könyvtárban jelenleg tárolt könyvek.",
+  "uniqueAuthors": "Különböző szerzők",
+  "uniqueAuthorsDescription": "A gyűjteményben szereplő különböző szerzők száma.",
+  "categories": "Kategóriák",
+  "categoriesDescription": "A jelenleg használt kategóriák.",
+  "uncategorized": "Kategória nélkül",
+  "uncategorizedDescription": "Kategorizálásra váró könyvek.",
+  "recentlyAdded": "Legutóbb hozzáadva",
+  "recentlyAddedDescription": "A könyvtárhoz legutóbb hozzáadott könyvek.",
+  "viewAll": "Összes megtekintése",
+  "noBooks": "Még nem került könyv a könyvtárba.",
+  "browseLibrary": "Könyvtár böngészése",
+  "addBook": "Könyv hozzáadása"
+}
 }

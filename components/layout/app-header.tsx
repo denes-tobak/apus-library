@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { LayoutDashboard, LibraryBig } from "lucide-react";
 
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { LogoutButton } from "@/components/layout/logout-button";
 import { Button } from "@/components/ui/button";
 
@@ -9,10 +11,12 @@ type AppHeaderProps = {
   email: string;
 };
 
-export function AppHeader({
+export async function AppHeader({
   displayName,
   email,
 }: AppHeaderProps) {
+  const t = await getTranslations("Navigation");
+
   const initial =
     displayName.trim().charAt(0).toUpperCase() || "U";
 
@@ -31,14 +35,24 @@ export function AppHeader({
         </Link>
 
         <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-          <Button asChild variant="ghost" size="sm">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            aria-label={t("dashboard")}
+          >
             <Link href="/dashboard">
               <LayoutDashboard className="size-4" />
+
               <span className="hidden sm:inline">
-                Dashboard
+                {t("dashboard")}
               </span>
             </Link>
           </Button>
+
+          <div className="shrink-0">
+            <LanguageSwitcher />
+          </div>
 
           <div
             title={email}
