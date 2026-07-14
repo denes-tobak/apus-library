@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { validateBookForm } from "@/lib/books/validate-book-form";
 import { createClient } from "@/lib/supabase/server";
@@ -12,6 +13,10 @@ export async function updateBook(
   _previousState: BookFormState,
   formData: FormData,
 ): Promise<BookFormState> {
+  const t = await getTranslations(
+    "BookForm.errors",
+  );
+
   const validation = validateBookForm(formData);
 
   if (!validation.data) {
@@ -25,7 +30,7 @@ export async function updateBook(
     return {
       values: validation.values,
       errors: {
-        form: "This book could not be identified.",
+        form: t("bookNotIdentified"),
       },
     };
   }
@@ -41,28 +46,32 @@ export async function updateBook(
     return {
       values: validation.values,
       errors: {
-        form: "Your session has expired. Please log in again.",
+        form: t("sessionExpired"),
       },
     };
   }
 
-  const { data: updatedBook, error } = await supabase
-    .from("books")
-    .update({
-      ...validation.data,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", bookId)
-    .select("id")
-    .maybeSingle();
+  const { data: updatedBook, error } =
+    await supabase
+      .from("books")
+      .update({
+        ...validation.data,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", bookId)
+      .select("id")
+      .maybeSingle();
 
   if (error) {
-    console.error("Failed to update book:", error);
+    console.error(
+      "Failed to update book:",
+      error,
+    );
 
     return {
       values: validation.values,
       errors: {
-        form: "The book could not be updated. Please try again.",
+        form: t("updateFailed"),
       },
     };
   }
@@ -71,13 +80,14 @@ export async function updateBook(
     return {
       values: validation.values,
       errors: {
-        form: "This book no longer exists or cannot be updated.",
+        form: t("bookMissing"),
       },
     };
   }
 
   revalidatePath("/books");
   revalidatePath(`/books/${bookId}`);
+  revalidatePath(`/books/${bookId}/edit`);
 
   redirect(`/books/${bookId}`);
 }

@@ -98,6 +98,47 @@
   "Science Fiction": "Tudományos-fantasztikus",
   "Thriller": "Thriller",
   "Travel": "Utazás",
-  "Young Adult": "Ifjúsági"
+  "Young Adult": "Ifjúsági",
+  "Manga": "Manga",
+  "Graphic Novel": "Képregény"
+},
+"EditBook": {
+  "backToBook": "Vissza a könyvhöz",
+  "eyebrow": "Könyvadatlap szerkesztése",
+  "title": "Frissítsd a könyv adatait.",
+  "description": "Pontosítsd vagy egészítsd ki az adatlapot, hogy a gyűjtemény rendezett és könnyen kereshető maradjon.",
+  "editing": "Szerkesztés alatt",
+  "publicationYear": "Megjelenés éve",
+  "categories": "Kategóriák",
+  "seriesNumber": "Sorozatszám",
+  "unknown": "Ismeretlen",
+  "notPartOfSeries": "Nem része sorozatnak",
+  "formTitle": "Könyvadatok",
+  "formDescription": "Módosítsd a könyv alapadatait, kiadási információit és kategóriáit.",
+  "saveChanges": "Változtatások mentése"
+},
+"BookForm": {
+  "basicInformation": "Alapadatok",
+  "basicInformationDescription": "A könyv azonosításához szükséges legfontosabb adatok.",
+  "title": "Cím",
+  "titlePlaceholder": "A könyv címe",
+  "author": "Szerző",
+  "authorPlaceholder": "A szerző neve",
+  "publicationDetails": "Megjelenés és sorozat",
+  "publicationDetailsDescription": "A könyv kiadásához és sorozatához kapcsolódó adatok.",
+  "publicationYear": "Megjelenés éve",
+  "publicationYearPlaceholder": "Nem kötelező",
+  "seriesNumber": "Sorozatszám",
+  "seriesNumberPlaceholder": "Nem kötelező",
+  "categories": "Kategóriák",
+  "categoriesDescription": "Jelöld ki az összes kategóriát, amely illik a könyvhöz.",
+  "cancel": "Mégse",
+  "saving": "Mentés...",
+  "errors": {
+    "bookNotIdentified": "A könyvet nem sikerült azonosítani.",
+    "sessionExpired": "A munkameneted lejárt. Jelentkezz be újra.",
+    "updateFailed": "A könyvet nem sikerült frissíteni. Próbáld újra.",
+    "bookMissing": "A könyv már nem létezik, vagy nem módosítható."
+  }
 }
 }

@@ -98,6 +98,47 @@
   "Science Fiction": "Science Fiction",
   "Thriller": "Thriller",
   "Travel": "Travel",
-  "Young Adult": "Young Adult"
+  "Young Adult": "Young Adult",
+  "Manga": "Manga",
+  "Graphic Novel": "Graphic Novel"
+},
+"EditBook": {
+  "backToBook": "Back to book",
+  "eyebrow": "Edit library record",
+  "title": "Refine this book record.",
+  "description": "Correct or expand the details so the collection remains accurate, organized and easy to search.",
+  "editing": "Currently editing",
+  "publicationYear": "Publication year",
+  "categories": "Categories",
+  "seriesNumber": "Series number",
+  "unknown": "Unknown",
+  "notPartOfSeries": "Not part of a series",
+  "formTitle": "Book information",
+  "formDescription": "Update the book's core details, publication information and categories.",
+  "saveChanges": "Save changes"
+},
+"BookForm": {
+  "basicInformation": "Basic information",
+  "basicInformationDescription": "The essential details used to identify this book.",
+  "title": "Title",
+  "titlePlaceholder": "Book title",
+  "author": "Author",
+  "authorPlaceholder": "Author name",
+  "publicationDetails": "Publication and series",
+  "publicationDetailsDescription": "Information about the book's publication and series.",
+  "publicationYear": "Publication year",
+  "publicationYearPlaceholder": "Optional",
+  "seriesNumber": "Series number",
+  "seriesNumberPlaceholder": "Optional",
+  "categories": "Categories",
+  "categoriesDescription": "Select every category that applies to this book.",
+  "cancel": "Cancel",
+  "saving": "Saving...",
+  "errors": {
+    "bookNotIdentified": "This book could not be identified.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "updateFailed": "The book could not be updated. Please try again.",
+    "bookMissing": "This book no longer exists or cannot be updated."
+  }
 }
 }
