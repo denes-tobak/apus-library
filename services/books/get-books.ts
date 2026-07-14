@@ -128,7 +128,16 @@ export async function getBooks({
     1,
     Math.ceil(totalCount / safePageSize),
   );
-
+    if (totalCount > 0 && safePage > totalPages) {
+    return getBooks({
+        page: totalPages,
+        pageSize: safePageSize,
+        searchTerm,
+        sortOption,
+        selectedCategories,
+    });
+    }
+    
   return {
     books: (data ?? []) as Book[],
     totalCount,

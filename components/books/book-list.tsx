@@ -7,17 +7,14 @@ import {
   useState,
   useTransition,
 } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 import {
   usePathname,
   useRouter,
   useSearchParams,
 } from "next/navigation";
 
+import { BookPagination } from "@/components/books/book-pagination";
 import { BookSearch } from "@/components/books/book-search";
 import { Button } from "@/components/ui/button";
 import {
@@ -205,24 +202,6 @@ export function BookList({
     params.delete("page");
 
     navigate(params, "push");
-  }
-
-  function createPageHref(targetPage: number) {
-    const params = new URLSearchParams(
-      searchParams.toString(),
-    );
-
-    if (targetPage <= 1) {
-      params.delete("page");
-    } else {
-      params.set("page", String(targetPage));
-    }
-
-    const queryString = params.toString();
-
-    return queryString
-      ? `${pathname}?${queryString}`
-      : pathname;
   }
 
   return (
@@ -461,49 +440,10 @@ export function BookList({
         )}
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row">
-          <p className="text-sm text-muted-foreground">
-            Page {page} of {totalPages}
-          </p>
-
-          <div className="flex gap-2">
-            {page > 1 ? (
-              <Button asChild variant="outline">
-                <Link
-                  href={createPageHref(page - 1)}
-                  scroll={false}
-                >
-                  <ChevronLeft className="size-4" />
-                  Previous
-                </Link>
-              </Button>
-            ) : (
-              <Button variant="outline" disabled>
-                <ChevronLeft className="size-4" />
-                Previous
-              </Button>
-            )}
-
-            {page < totalPages ? (
-              <Button asChild variant="outline">
-                <Link
-                  href={createPageHref(page + 1)}
-                  scroll={false}
-                >
-                  Next
-                  <ChevronRight className="size-4" />
-                </Link>
-              </Button>
-            ) : (
-              <Button variant="outline" disabled>
-                Next
-                <ChevronRight className="size-4" />
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
+      <BookPagination
+        page={page}
+        totalPages={totalPages}
+      />
     </div>
   );
 }
