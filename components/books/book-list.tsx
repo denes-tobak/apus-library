@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
 
+import { BookSearch } from "@/components/books/book-search";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Book } from "@/types/book";
 
@@ -31,16 +31,8 @@ export function BookList({ books }: BookListProps) {
 
   return (
     <div>
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
-
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-          placeholder="Search by title, author or category..."
-          className="h-11 w-full rounded-md border bg-background pl-10 pr-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-        />
+      <div className="mb-6">
+        <BookSearch value={searchTerm} onChange={setSearchTerm} />
       </div>
 
       <p className="mb-4 text-sm text-muted-foreground">
@@ -56,9 +48,14 @@ export function BookList({ books }: BookListProps) {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredBooks.map((book) => (
-            <Card key={book.id} className="transition hover:-translate-y-0.5 hover:shadow-md">
+            <Card
+              key={book.id}
+              className="transition hover:-translate-y-0.5 hover:shadow-md"
+            >
               <CardHeader>
-                <CardTitle className="line-clamp-2">{book.title}</CardTitle>
+                <CardTitle className="line-clamp-2">
+                  {book.title}
+                </CardTitle>
 
                 <p className="text-sm text-muted-foreground">
                   {book.author}
@@ -76,12 +73,13 @@ export function BookList({ books }: BookListProps) {
                   {book.category ?? "Uncategorized"}
                 </p>
 
-                {book.series_number !== null && book.series_number > 0 && (
-                  <p>
-                    <span className="font-medium">Series:</span>{" "}
-                    #{book.series_number}
-                  </p>
-                )}
+                {book.series_number !== null &&
+                  book.series_number > 0 && (
+                    <p>
+                      <span className="font-medium">Series:</span>{" "}
+                      #{book.series_number}
+                    </p>
+                  )}
               </CardContent>
             </Card>
           ))}
