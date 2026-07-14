@@ -1,0 +1,24 @@
+{
+  "Language": {
+    "hungarian": "Magyar",
+    "english": "English"
+  },
+  "Login": {
+    "eyebrow": "Személyes könyvtárkezelő",
+    "heroTitle": "A családi könyvtár rendezésének nyugodtabb és barátságosabb módja.",
+    "heroDescription": "Tartsd a könyveket rendezetten, kereshetően és könnyen kezelhetően – egyetlen letisztult felületen.",
+    "featureBrowse": "Könnyen áttekinthető gyűjtemény",
+    "featureSearch": "Gyors keresés, rendezés és szűrés",
+    "featureSimple": "Egyszerű és barátságos használat",
+    "welcome": "Üdvözlünk újra",
+    "subtitle": "Jelentkezz be a könyvtár kezeléséhez.",
+    "email": "E-mail-cím",
+    "emailPlaceholder": "nev@pelda.hu",
+    "password": "Jelszó",
+    "passwordPlaceholder": "Add meg a jelszavad",
+    "signIn": "Bejelentkezés",
+    "signingIn": "Bejelentkezés...",
+    "invalidCredentials": "A megadott e-mail-cím vagy jelszó nem megfelelő.",
+    "footer": "Az Apus Library segít rendszerezni és könnyen áttekinteni a gyűjteményt."
+  }
+}

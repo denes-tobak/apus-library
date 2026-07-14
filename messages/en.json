@@ -1,0 +1,24 @@
+{
+  "Language": {
+    "hungarian": "Magyar",
+    "english": "English"
+  },
+  "Login": {
+    "eyebrow": "Personal library management",
+    "heroTitle": "A calmer, friendlier way to manage your family library.",
+    "heroDescription": "Keep books organized, searchable, and easy to maintain – all in one clean place.",
+    "featureBrowse": "Browse your collection with ease",
+    "featureSearch": "Search, sort, and filter instantly",
+    "featureSimple": "Built to feel simple and welcoming",
+    "welcome": "Welcome back",
+    "subtitle": "Sign in to continue managing your library.",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "invalidCredentials": "The email address or password is incorrect.",
+    "footer": "Apus Library helps keep your collection organized and easy to explore."
+  }
+}
