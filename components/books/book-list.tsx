@@ -1,8 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { X } from "lucide-react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 import { BookSearch } from "@/components/books/book-search";
 import { Button } from "@/components/ui/button";
@@ -12,166 +26,267 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  UNCATEGORIZED_FILTER,
+  type BookSortOption,
+} from "@/lib/books/book-query";
 import type { Book } from "@/types/book";
+
+type CategoryOption = {
+  name: string;
+  bookCount: number;
+};
 
 type BookListProps = {
   books: Book[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  searchTerm: string;
+  sortOption: BookSortOption;
+  selectedCategories: string[];
+  categories: CategoryOption[];
+  uncategorizedCount: number;
 };
 
-type SortOption =
-  | "title-asc"
-  | "title-desc"
-  | "author-asc"
-  | "author-desc"
-  | "year-desc"
-  | "year-asc";
+type NavigationMode = "push" | "replace";
 
-const UNCATEGORIZED_FILTER = "__uncategorized__";
+export function BookList({
+  books,
+  totalCount,
+  page,
+  pageSize,
+  totalPages,
+  searchTerm,
+  sortOption,
+  selectedCategories,
+  categories,
+  uncategorizedCount,
+}: BookListProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-export function BookList({ books }: BookListProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOption, setSortOption] =
-    useState<SortOption>("title-asc");
-  const [selectedCategories, setSelectedCategories] = useState<
-    string[]
-  >([]);
+  const [searchValue, setSearchValue] =
+    useState(searchTerm);
 
-  const availableCategories = useMemo(() => {
-    const categories = new Set<string>();
+  const [isPending, startTransition] =
+    useTransition();
 
-    books.forEach((book) => {
-      book.categories.forEach((category) => {
-        categories.add(category);
-      });
-    });
+  const navigate = useCallback(
+    (
+      params: URLSearchParams,
+      mode: NavigationMode,
+    ) => {
+      const queryString = params.toString();
 
-    return Array.from(categories).sort((a, b) =>
-      a.localeCompare(b),
-    );
-  }, [books]);
+      const href = queryString
+        ? `${pathname}?${queryString}`
+        : pathname;
 
-  const hasUncategorizedBooks = useMemo(() => {
-    return books.some((book) => book.categories.length === 0);
-  }, [books]);
+      startTransition(() => {
+        if (mode === "replace") {
+          router.replace(href, {
+            scroll: false,
+          });
 
-  const visibleBooks = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+          return;
+        }
 
-    const filteredBooks = books.filter((book) => {
-      const matchesSearch =
-        !normalizedSearch ||
-        book.title.toLowerCase().includes(normalizedSearch) ||
-        book.author.toLowerCase().includes(normalizedSearch) ||
-        book.categories.some((category) =>
-          category.toLowerCase().includes(normalizedSearch),
-        );
-
-      const matchesCategory =
-        selectedCategories.length === 0 ||
-        selectedCategories.some((category) => {
-          if (category === UNCATEGORIZED_FILTER) {
-            return book.categories.length === 0;
-          }
-
-          return book.categories.includes(category);
+        router.push(href, {
+          scroll: false,
         });
+      });
+    },
+    [pathname, router],
+  );
 
-      return matchesSearch && matchesCategory;
-    });
+  useEffect(() => {
+    setSearchValue(searchTerm);
+  }, [searchTerm]);
 
-    return [...filteredBooks].sort((a, b) => {
-      switch (sortOption) {
-        case "title-asc":
-          return a.title.localeCompare(b.title);
+  useEffect(() => {
+    const normalizedSearch = searchValue.trim();
 
-        case "title-desc":
-          return b.title.localeCompare(a.title);
+    if (normalizedSearch === searchTerm) {
+      return;
+    }
 
-        case "author-asc":
-          return a.author.localeCompare(b.author);
+    const timeout = window.setTimeout(() => {
+      const params = new URLSearchParams(
+        searchParams.toString(),
+      );
 
-        case "author-desc":
-          return b.author.localeCompare(a.author);
-
-        case "year-desc":
-          if (a.published_year === null) return 1;
-          if (b.published_year === null) return -1;
-
-          return b.published_year - a.published_year;
-
-        case "year-asc":
-          if (a.published_year === null) return 1;
-          if (b.published_year === null) return -1;
-
-          return a.published_year - b.published_year;
+      if (normalizedSearch) {
+        params.set("search", normalizedSearch);
+      } else {
+        params.delete("search");
       }
-    });
-  }, [books, searchTerm, selectedCategories, sortOption]);
+
+      params.delete("page");
+
+      navigate(params, "replace");
+    }, 350);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    navigate,
+    searchParams,
+    searchTerm,
+    searchValue,
+  ]);
 
   const hasActiveFilters =
-    searchTerm.trim().length > 0 ||
+    searchTerm.length > 0 ||
     selectedCategories.length > 0;
 
-  function toggleCategory(category: string) {
-    setSelectedCategories((currentCategories) => {
-      if (currentCategories.includes(category)) {
-        return currentCategories.filter(
-          (currentCategory) => currentCategory !== category,
-        );
-      }
+  const firstVisibleBook =
+    totalCount === 0
+      ? 0
+      : (page - 1) * pageSize + 1;
 
-      return [...currentCategories, category];
+  const lastVisibleBook = Math.min(
+    page * pageSize,
+    totalCount,
+  );
+
+  function handleSortChange(
+    nextSortOption: BookSortOption,
+  ) {
+    const params = new URLSearchParams(
+      searchParams.toString(),
+    );
+
+    if (nextSortOption === "title-asc") {
+      params.delete("sort");
+    } else {
+      params.set("sort", nextSortOption);
+    }
+
+    params.delete("page");
+
+    navigate(params, "push");
+  }
+
+  function toggleCategory(category: string) {
+    const nextCategories =
+      selectedCategories.includes(category)
+        ? selectedCategories.filter(
+            (selectedCategory) =>
+              selectedCategory !== category,
+          )
+        : [...selectedCategories, category];
+
+    const params = new URLSearchParams(
+      searchParams.toString(),
+    );
+
+    params.delete("category");
+
+    nextCategories.forEach((selectedCategory) => {
+      params.append("category", selectedCategory);
     });
+
+    params.delete("page");
+
+    navigate(params, "push");
   }
 
   function clearFilters() {
-    setSearchTerm("");
-    setSelectedCategories([]);
+    setSearchValue("");
+
+    const params = new URLSearchParams(
+      searchParams.toString(),
+    );
+
+    params.delete("search");
+    params.delete("category");
+    params.delete("page");
+
+    navigate(params, "push");
+  }
+
+  function createPageHref(targetPage: number) {
+    const params = new URLSearchParams(
+      searchParams.toString(),
+    );
+
+    if (targetPage <= 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(targetPage));
+    }
+
+    const queryString = params.toString();
+
+    return queryString
+      ? `${pathname}?${queryString}`
+      : pathname;
   }
 
   return (
-    <div>
-      <div className="mb-6 space-y-4">
+    <div
+      aria-busy={isPending}
+      className="space-y-6"
+    >
+      <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row">
           <div className="flex-1">
             <BookSearch
-              value={searchTerm}
-              onChange={setSearchTerm}
+              value={searchValue}
+              onChange={setSearchValue}
             />
           </div>
 
           <select
             value={sortOption}
             onChange={(event) =>
-              setSortOption(event.target.value as SortOption)
+              handleSortChange(
+                event.target.value as BookSortOption,
+              )
             }
             aria-label="Sort books"
-            className="h-11 rounded-md border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 sm:w-52"
+            className="h-11 rounded-md border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 sm:w-56"
           >
-            <option value="title-asc">Title: A–Z</option>
-            <option value="title-desc">Title: Z–A</option>
-            <option value="author-asc">Author: A–Z</option>
-            <option value="author-desc">Author: Z–A</option>
+            <option value="title-asc">
+              Title: A–Z
+            </option>
+
+            <option value="title-desc">
+              Title: Z–A
+            </option>
+
+            <option value="author-asc">
+              Author: A–Z
+            </option>
+
+            <option value="author-desc">
+              Author: Z–A
+            </option>
+
             <option value="year-desc">
               Publication year: Newest
             </option>
+
             <option value="year-asc">
               Publication year: Oldest
             </option>
           </select>
         </div>
 
-        {(availableCategories.length > 0 ||
-          hasUncategorizedBooks) && (
+        {(categories.length > 0 ||
+          uncategorizedCount > 0) && (
           <div className="space-y-3">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-medium">
                   Filter by category
                 </p>
 
                 <p className="text-xs text-muted-foreground">
-                  Books matching any selected category are shown.
+                  Books matching any selected category are
+                  shown.
                 </p>
               </div>
 
@@ -189,25 +304,37 @@ export function BookList({ books }: BookListProps) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {availableCategories.map((category) => {
+              {categories.map((category) => {
                 const isSelected =
-                  selectedCategories.includes(category);
+                  selectedCategories.includes(
+                    category.name,
+                  );
 
                 return (
                   <Button
-                    key={category}
+                    key={category.name}
                     type="button"
                     size="sm"
-                    variant={isSelected ? "default" : "outline"}
+                    variant={
+                      isSelected
+                        ? "default"
+                        : "outline"
+                    }
                     aria-pressed={isSelected}
-                    onClick={() => toggleCategory(category)}
+                    onClick={() =>
+                      toggleCategory(category.name)
+                    }
                   >
-                    {category}
+                    {category.name}
+
+                    <span className="text-xs opacity-70">
+                      {category.bookCount}
+                    </span>
                   </Button>
                 );
               })}
 
-              {hasUncategorizedBooks && (
+              {uncategorizedCount > 0 && (
                 <Button
                   type="button"
                   size="sm"
@@ -222,10 +349,16 @@ export function BookList({ books }: BookListProps) {
                     UNCATEGORIZED_FILTER,
                   )}
                   onClick={() =>
-                    toggleCategory(UNCATEGORIZED_FILTER)
+                    toggleCategory(
+                      UNCATEGORIZED_FILTER,
+                    )
                   }
                 >
                   Uncategorized
+
+                  <span className="text-xs opacity-70">
+                    {uncategorizedCount}
+                  </span>
                 </Button>
               )}
             </div>
@@ -233,80 +366,142 @@ export function BookList({ books }: BookListProps) {
         )}
       </div>
 
-      <p className="mb-4 text-sm text-muted-foreground">
-        Showing {visibleBooks.length} of {books.length} books
-      </p>
+      <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          {totalCount === 0
+            ? "Showing 0 books"
+            : `Showing ${firstVisibleBook}–${lastVisibleBook} of ${totalCount} books`}
+        </p>
 
-      {visibleBooks.length === 0 ? (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            {hasActiveFilters
-              ? "No books match your current filters."
-              : "No books have been added yet."}
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {visibleBooks.map((book) => (
-            <Link
-              key={book.id}
-              href={`/books/${book.id}`}
-              aria-label={`View details for ${book.title}`}
-              className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <Card className="h-full transition hover:-translate-y-0.5 hover:shadow-md">
-                <CardHeader>
-                  <CardTitle className="line-clamp-2">
-                    {book.title}
-                  </CardTitle>
+        {isPending && <p>Updating results...</p>}
+      </div>
 
-                  <p className="text-sm text-muted-foreground">
-                    {book.author}
-                  </p>
-                </CardHeader>
+      <div
+        className={
+          isPending
+            ? "opacity-60 transition-opacity"
+            : "transition-opacity"
+        }
+      >
+        {books.length === 0 ? (
+          <Card>
+            <CardContent className="py-10 text-center text-muted-foreground">
+              {hasActiveFilters
+                ? "No books match your current filters."
+                : "No books have been added yet."}
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {books.map((book) => (
+              <Link
+                key={book.id}
+                href={`/books/${book.id}`}
+                aria-label={`View details for ${book.title}`}
+                className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <Card className="h-full transition hover:-translate-y-0.5 hover:shadow-md">
+                  <CardHeader>
+                    <CardTitle className="line-clamp-2">
+                      {book.title}
+                    </CardTitle>
 
-                <CardContent className="space-y-3 text-sm">
-                  <p>
-                    <span className="font-medium">Year:</span>{" "}
-                    {book.published_year ?? "Unknown"}
-                  </p>
+                    <p className="text-sm text-muted-foreground">
+                      {book.author}
+                    </p>
+                  </CardHeader>
 
-                  <div className="space-y-2">
-                    <span className="font-medium">
-                      Categories:
-                    </span>
+                  <CardContent className="space-y-3 text-sm">
+                    <p>
+                      <span className="font-medium">
+                        Year:
+                      </span>{" "}
+                      {book.published_year ?? "Unknown"}
+                    </p>
 
-                    {book.categories.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {book.categories.map((category) => (
-                          <span
-                            key={category}
-                            className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground"
-                          >
-                            {category}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-muted-foreground">
-                        Uncategorized
-                      </p>
-                    )}
-                  </div>
+                    <div className="space-y-2">
+                      <span className="font-medium">
+                        Categories:
+                      </span>
 
-                  {book.series_number !== null &&
-                    book.series_number > 0 && (
-                      <p>
-                        <span className="font-medium">
-                          Series:
-                        </span>{" "}
-                        #{book.series_number}
-                      </p>
-                    )}
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+                      {book.categories.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {book.categories.map(
+                            (category) => (
+                              <span
+                                key={category}
+                                className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground"
+                              >
+                                {category}
+                              </span>
+                            ),
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">
+                          Uncategorized
+                        </p>
+                      )}
+                    </div>
+
+                    {book.series_number !== null &&
+                      book.series_number > 0 && (
+                        <p>
+                          <span className="font-medium">
+                            Series:
+                          </span>{" "}
+                          #{book.series_number}
+                        </p>
+                      )}
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {totalPages > 1 && (
+        <div className="flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row">
+          <p className="text-sm text-muted-foreground">
+            Page {page} of {totalPages}
+          </p>
+
+          <div className="flex gap-2">
+            {page > 1 ? (
+              <Button asChild variant="outline">
+                <Link
+                  href={createPageHref(page - 1)}
+                  scroll={false}
+                >
+                  <ChevronLeft className="size-4" />
+                  Previous
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled>
+                <ChevronLeft className="size-4" />
+                Previous
+              </Button>
+            )}
+
+            {page < totalPages ? (
+              <Button asChild variant="outline">
+                <Link
+                  href={createPageHref(page + 1)}
+                  scroll={false}
+                >
+                  Next
+                  <ChevronRight className="size-4" />
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled>
+                Next
+                <ChevronRight className="size-4" />
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </div>
