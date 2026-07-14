@@ -7,7 +7,8 @@ import { validateBookForm } from "@/lib/books/validate-book-form";
 import { createClient } from "@/lib/supabase/server";
 import type { BookFormState } from "@/types/book-form";
 
-export async function addBook(
+export async function updateBook(
+  bookId: number,
   _previousState: BookFormState,
   formData: FormData,
 ): Promise<BookFormState> {
@@ -17,6 +18,15 @@ export async function addBook(
     return {
       values: validation.values,
       errors: validation.errors,
+    };
+  }
+
+  if (!Number.isInteger(bookId) || bookId < 1) {
+    return {
+      values: validation.values,
+      errors: {
+        form: "This book could not be identified.",
+      },
     };
   }
 
@@ -36,23 +46,38 @@ export async function addBook(
     };
   }
 
-  const { data: book, error } = await supabase
+  const { data: updatedBook, error } = await supabase
     .from("books")
-    .insert(validation.data)
+    .update({
+      ...validation.data,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", bookId)
     .select("id")
-    .single();
+    .maybeSingle();
 
-  if (error || !book) {
-    console.error("Failed to add book:", error);
+  if (error) {
+    console.error("Failed to update book:", error);
 
     return {
       values: validation.values,
       errors: {
-        form: "The book could not be added. Please try again.",
+        form: "The book could not be updated. Please try again.",
+      },
+    };
+  }
+
+  if (!updatedBook) {
+    return {
+      values: validation.values,
+      errors: {
+        form: "This book no longer exists or cannot be updated.",
       },
     };
   }
 
   revalidatePath("/books");
-  redirect(`/books/${book.id}`);
+  revalidatePath(`/books/${bookId}`);
+
+  redirect(`/books/${bookId}`);
 }

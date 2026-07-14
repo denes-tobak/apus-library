@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import {  ArrowLeft,  BookOpen,  Pencil,} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -56,12 +56,21 @@ export default async function BookDetailsPage({
 
   return (
     <div className="space-y-6">
-      <Button asChild variant="ghost" className="-ml-3">
-        <Link href="/books">
-          <ArrowLeft className="size-4" />
-          Back to books
-        </Link>
-      </Button>
+      <div className="flex items-center justify-between gap-4">
+        <Button asChild variant="ghost" className="-ml-3">
+            <Link href="/books">
+            <ArrowLeft className="size-4" />
+            Back to books
+            </Link>
+        </Button>
+
+        <Button asChild variant="outline">
+            <Link href={`/books/${book.id}/edit`}>
+            <Pencil className="size-4" />
+            Edit book
+            </Link>
+        </Button>
+    </div>
 
       <Card>
         <CardHeader>
