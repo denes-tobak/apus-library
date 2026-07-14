@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import type { Book } from "@/types/book";
+import { BookList } from "@/components/books/book-list";
 
 export default async function BooksPage() {
   const supabase = await createClient();
@@ -65,37 +66,8 @@ export default async function BooksPage() {
               No books found.
             </CardContent>
           </Card>
-        )}
-
-        {!error && books.length > 0 && (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {books.map((book) => (
-              <Card key={book.id}>
-                <CardHeader>
-                  <CardTitle>{book.title}</CardTitle>
-                  <CardDescription>{book.author}</CardDescription>
-                </CardHeader>
-
-                <CardContent className="space-y-2 text-sm">
-                  <p>
-                    <span className="font-medium">Year:</span>{" "}
-                    {book.published_year ?? "Unknown"}
-                  </p>
-
-                  <p>
-                    <span className="font-medium">Category:</span>{" "}
-                    {book.category ?? "Uncategorized"}
-                  </p>
-
-                  <p>
-                    <span className="font-medium">Series number:</span>{" "}
-                    {book.series_number ?? 0}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        )}        
+          {!error && <BookList books={books} />}        
       </section>
     </main>
   );
