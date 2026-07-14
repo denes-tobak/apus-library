@@ -7,7 +7,7 @@ export type BookWriteValues = {
   title: string;
   author: string;
   published_year: number | null;
-  category: string | null;
+  categories: string[];
   series_number: number | null;
 };
 
@@ -26,6 +26,16 @@ function getTextValue(
   return typeof value === "string" ? value.trim() : "";
 }
 
+function getCategories(formData: FormData) {
+  const categories = formData
+    .getAll("categories")
+    .filter((value): value is string => typeof value === "string")
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  return [...new Set(categories)];
+}
+
 export function validateBookForm(
   formData: FormData,
 ): BookFormValidationResult {
@@ -36,7 +46,7 @@ export function validateBookForm(
       formData,
       "published_year",
     ),
-    category: getTextValue(formData, "category"),
+    categories: getCategories(formData),
     series_number: getTextValue(
       formData,
       "series_number",
@@ -80,6 +90,20 @@ export function validateBookForm(
       "Series number must be a positive whole number.";
   }
 
+  if (values.categories.length > 10) {
+    errors.categories =
+      "A book can have a maximum of 10 categories.";
+  }
+
+  if (
+    values.categories.some(
+      (category) => category.length > 50,
+    )
+  ) {
+    errors.categories =
+      "Category names cannot exceed 50 characters.";
+  }
+
   if (Object.keys(errors).length > 0) {
     return {
       values,
@@ -95,7 +119,7 @@ export function validateBookForm(
       title: values.title,
       author: values.author,
       published_year: publishedYear,
-      category: values.category || null,
+      categories: values.categories,
       series_number: seriesNumber,
     },
   };

@@ -37,9 +37,9 @@ export function BookList({ books }: BookListProps) {
           return (
             book.title.toLowerCase().includes(normalizedSearch) ||
             book.author.toLowerCase().includes(normalizedSearch) ||
-            book.category
-              ?.toLowerCase()
-              .includes(normalizedSearch)
+            book.categories.some((category) =>
+  category.toLowerCase().includes(normalizedSearch),
+)
           );
         })
       : books;
@@ -140,10 +140,26 @@ export function BookList({ books }: BookListProps) {
           {book.published_year ?? "Unknown"}
         </p>
 
-        <p>
-          <span className="font-medium">Category:</span>{" "}
-          {book.category ?? "Uncategorized"}
-        </p>
+      <div className="space-y-2">
+  <span className="font-medium">Categories:</span>
+
+  {book.categories.length > 0 ? (
+    <div className="flex flex-wrap gap-2">
+      {book.categories.map((category) => (
+        <span
+          key={category}
+          className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground"
+        >
+          {category}
+        </span>
+      ))}
+    </div>
+  ) : (
+    <p className="text-muted-foreground">
+      Uncategorized
+    </p>
+  )}
+</div>
 
         {book.series_number !== null &&
           book.series_number > 0 && (

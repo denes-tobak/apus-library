@@ -3,7 +3,7 @@ export type Book = {
   title: string;
   author: string;
   published_year: number | null;
-  category: string | null;
+  categories: string[];
   series_number: number | null;
   created_at: string;
   updated_at: string;

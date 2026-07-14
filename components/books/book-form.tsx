@@ -8,6 +8,7 @@ import type {
   BookFormState,
   BookFormValues,
 } from "@/types/book-form";
+import { BOOK_CATEGORIES } from "@/lib/books/book-categories";
 
 type BookFormAction = (
   state: BookFormState,
@@ -24,7 +25,7 @@ const emptyValues: BookFormValues = {
   title: "",
   author: "",
   published_year: "",
-  category: "",
+  categories: [],
   series_number: "",
 };
 
@@ -186,35 +187,51 @@ export function BookForm({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="category" className="text-sm font-medium">
-          Category
+     <fieldset className="space-y-3">
+  <div>
+    <legend className="text-sm font-medium">
+      Categories
+    </legend>
+
+    <p className="mt-1 text-sm text-muted-foreground">
+      Select all categories that apply.
+    </p>
+  </div>
+
+  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+    {Array.from(
+      new Set([
+        ...BOOK_CATEGORIES,
+        ...state.values.categories,
+      ]),
+    )
+      .sort((a, b) => a.localeCompare(b))
+      .map((category) => (
+        <label
+          key={category}
+          className="flex cursor-pointer items-center gap-3 rounded-md border bg-background px-3 py-2.5 text-sm transition hover:bg-muted/50"
+        >
+          <input
+            type="checkbox"
+            name="categories"
+            value={category}
+            defaultChecked={state.values.categories.includes(
+              category,
+            )}
+            className="size-4 accent-primary"
+          />
+
+          <span>{category}</span>
         </label>
+      ))}
+  </div>
 
-        <input
-          id="category"
-          name="category"
-          type="text"
-          defaultValue={state.values.category}
-          placeholder="Optional"
-          aria-invalid={Boolean(state.errors.category)}
-          aria-describedby={
-            state.errors.category
-              ? "category-error"
-              : undefined
-          }
-          className={inputClassName}
-        />
-
-        {state.errors.category && (
-          <p
-            id="category-error"
-            className="text-sm text-destructive"
-          >
-            {state.errors.category}
-          </p>
-        )}
-      </div>
+  {state.errors.categories && (
+    <p className="text-sm text-destructive">
+      {state.errors.categories}
+    </p>
+  )}
+</fieldset>
 
       <Button type="submit" disabled={isPending}>
         {isPending && (

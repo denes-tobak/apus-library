@@ -37,7 +37,7 @@ export default async function BookDetailsPage({
         title,
         author,
         published_year,
-        category,
+        categories,
         series_number,
         created_at,
         updated_at
@@ -103,15 +103,30 @@ export default async function BookDetailsPage({
               </dd>
             </div>
 
-            <div className="space-y-1">
-              <dt className="text-sm text-muted-foreground">
-                Category
-              </dt>
+                            <div className="space-y-2">
+                <dt className="text-sm text-muted-foreground">
+                    Categories
+                </dt>
 
-              <dd className="font-medium">
-                {book.category ?? "Uncategorized"}
-              </dd>
-            </div>
+                <dd>
+                    {book.categories.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                        {book.categories.map((category: string) => (
+                        <span
+                            key={category}
+                            className="rounded-full bg-muted px-2.5 py-1 text-sm"
+                        >
+                            {category}
+                        </span>
+                        ))}
+                    </div>
+                    ) : (
+                    <span className="font-medium">
+                        Uncategorized
+                    </span>
+                    )}
+                </dd>
+                </div>
 
             <div className="space-y-1">
               <dt className="text-sm text-muted-foreground">

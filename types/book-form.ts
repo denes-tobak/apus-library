@@ -2,7 +2,7 @@ export type BookFormValues = {
   title: string;
   author: string;
   published_year: string;
-  category: string;
+  categories: string[];
   series_number: string;
 };
 

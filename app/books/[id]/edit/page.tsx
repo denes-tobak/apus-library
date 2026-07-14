@@ -41,7 +41,7 @@ export default async function EditBookPage({
         title,
         author,
         published_year,
-        category,
+        categories,
         series_number
       `,
     )
@@ -87,7 +87,7 @@ export default async function EditBookPage({
               author: book.author,
               published_year:
                 book.published_year?.toString() ?? "",
-              category: book.category ?? "",
+              categories: book.categories ?? [],
               series_number:
                 book.series_number?.toString() ?? "",
             }}
