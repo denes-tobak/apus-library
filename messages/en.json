@@ -40,6 +40,15 @@
   "viewAll": "View all",
   "noBooks": "No books have been added yet.",
   "browseLibrary": "Browse library",
-  "addBook": "Add book"
+  "addBook": "Add book",
+  "eyebrow": "Personal library",
+"heroTitle": "A home for every story.",
+"heroDescription": "{books} books and {authors} authors, organized into one beautiful and searchable collection.",
+"collectionProgress": "Categorization progress",
+"collectionProgressDescription": "{categorized} of {total} books currently have a category.",
+"quickActions": "Quick actions",
+"manageCollection": "Manage your collection",
+"browseLibraryDescription": "Search and explore the complete collection.",
+"addBookDescription": "Add a new book to the library."
 }
 }

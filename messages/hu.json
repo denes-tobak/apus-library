@@ -40,6 +40,15 @@
   "viewAll": "Összes megtekintése",
   "noBooks": "Még nem került könyv a könyvtárba.",
   "browseLibrary": "Könyvtár böngészése",
-  "addBook": "Könyv hozzáadása"
+  "addBook": "Könyv hozzáadása",
+  "eyebrow": "Személyes könyvtár",
+    "heroTitle": "A történetek otthona.",
+    "heroDescription": "{books} könyv és {authors} szerző egyetlen rendezett, könnyen böngészhető gyűjteményben.",
+    "collectionProgress": "Kategorizálási állapot",
+    "collectionProgressDescription": "{categorized} könyv van kategorizálva az összesen {total} könyvből.",
+    "quickActions": "Gyorsműveletek",
+    "manageCollection": "Gyűjtemény kezelése",
+    "browseLibraryDescription": "Keresés és böngészés a teljes gyűjteményben.",
+    "addBookDescription": "Új könyv hozzáadása a könyvtárhoz."
 }
 }
