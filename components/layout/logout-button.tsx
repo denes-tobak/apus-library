@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/auth/actions";
 
 export async function LogoutButton() {
-  const t = await getTranslations("Navigation");
+  const t = await getTranslations(
+    "Navigation",
+  );
 
   return (
     <form action={signOut}>
@@ -13,11 +15,13 @@ export async function LogoutButton() {
         type="submit"
         variant="ghost"
         size="sm"
+        title={t("logout")}
         aria-label={t("logout")}
+        className="h-10 rounded-xl border border-white/10 bg-white/5 px-3 text-stone-300 shadow-sm hover:border-red-300/20 hover:bg-red-500/15 hover:text-red-100"
       >
         <LogOut className="size-4" />
 
-        <span className="hidden sm:inline">
+        <span className="hidden xl:inline">
           {t("logout")}
         </span>
       </Button>

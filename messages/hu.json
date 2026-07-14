@@ -22,7 +22,8 @@
     "footer": "Az Apus Library segít rendszerezni és könnyen áttekinteni a gyűjteményt."
   },
   "Navigation": {
-  "dashboard": "Vezérlőpult",
+   "dashboard": "Vezérlőpult",
+  "books": "Könyvek",
   "logout": "Kijelentkezés"
 },
 "Dashboard": {

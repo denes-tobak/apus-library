@@ -23,6 +23,7 @@
   },
   "Navigation": {
   "dashboard": "Dashboard",
+  "books": "Books",
   "logout": "Logout"
 },
 "Dashboard": {
